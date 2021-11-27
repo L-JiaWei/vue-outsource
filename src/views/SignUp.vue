@@ -1,6 +1,6 @@
 <template>
-  <h2>Product Title&Logo etc</h2>
-  <div class="about">
+  <div class="app-signup">
+    <h2>Product Title&Logo etc</h2>
     <h5>Sign up for free</h5>
     <el-form
       ref="ruleForm"
@@ -42,14 +42,14 @@
       </el-form-item>
     </el-form>
     <el-button type="primary" round @click="sign">sign up</el-button>
-    <index />
   </div>
+  <index />
 </template>
 <script>
-import { ref } from "vue";
 import { ElForm, ElInput, ElFormItem, ElButton, ElMessage } from "element-plus";
 import { request } from "../network/request.js";
 import index from "../components/index.vue";
+import { useStore } from "vuex";
 export default {
   components: {
     ElForm,
@@ -70,6 +70,7 @@ export default {
         callback();
       }
     };
+
     const validatePass2 = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("Please input the password again"));
@@ -79,6 +80,7 @@ export default {
         callback();
       }
     };
+
     const validatePass3 = (rule, value, callback) => {
       const reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
       if (value === "") {
@@ -89,15 +91,18 @@ export default {
         callback(new Error("Please enter the correct email format"));
       }
     };
+
     const validatePass4 = (rule, value, callback) => {
+      const reg = /^[\u4e00-\u9fa5]|^[0-9a-zA-Z_]{0,}$/;
       if (value === "") {
         callback(new Error("please enter one user name "));
-      } else if (value !== "" && value.length < 8) {
+      } else if (value !== "" && reg.test(value)) {
         callback();
       } else {
         callback(new Error("The user name should be less than 8"));
       }
     };
+
     return {
       input1: "",
       ruleForm: {
@@ -132,15 +137,15 @@ export default {
             new_user: false,
           },
         });
-        if (res.data.statusCode === 1) {
+        if (true) {
           ElMessage.success("reg was successful");
+          this.$store.commit("storageSignUser", {
+            username: this.ruleForm.name,
+            email: this.ruleForm.email,
+            new_user: false,
+          });
           this.$router.push({
             name: "developer",
-            params: {
-              username: this.ruleForm.name,
-              email: this.ruleForm.email,
-              new_user: false,
-            },
           });
         } else {
           ElMessage.error("reg has failed");
@@ -154,16 +159,16 @@ export default {
 </script>
 
 
-<style scoped>
-.about {
+<style lang="less">
+.app-signup {
   width: 400px;
   margin: auto;
   margin-top: 30px;
-}
-.el-input {
-  margin-bottom: 5px;
-}
-.el-button {
-  margin-bottom: 15px;
+  .el-input {
+    margin-bottom: 5px;
+  }
+  .el-button {
+    margin-bottom: 15px;
+  }
 }
 </style>

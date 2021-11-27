@@ -1,26 +1,26 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import About from '../views/About.vue'
-import client from '../views/client.vue'
-import developer from '../views/developer.vue'
+import Login from '../views/Login.vue'
+import SignUp from '../views/SignUp.vue'
+import Client from '../views/Client.vue'
+import Developer from '../views/Developer.vue'
 const routes = [{
         path: '/',
-        name: 'Home',
-        component: Home
+        name: 'login',
+        component: Login
     },
     {
-        path: '/about',
-        name: 'About',
-        component: About
+        path: '/signup',
+        name: 'signup',
+        component: SignUp
     }, {
         path: "/client",
         name: "client",
-        component: client
+        component: Client
     },
     {
         path: "/developer",
         name: "developer",
-        component: developer
+        component: Developer
     },
     {
         path: '/:pathMatch(.*)',

@@ -1,6 +1,6 @@
 <template>
-  <h2>Product Title&Logo etc</h2>
-  <div class="box">
+  <div class="app-box">
+    <h2>Product Title&Logo etc</h2>
     <h5>Log in to your account or sign up for free</h5>
     <el-input v-model="email" placeholder="Please enter email address" />
     <el-input
@@ -17,8 +17,8 @@
       </div>
     </div>
     <el-button type="primary" round @click="login">Login</el-button>
-    <index />
   </div>
+  <index />
 </template>
 
 <script>
@@ -49,7 +49,7 @@ export default defineComponent({
     return {
       email: "",
       password: "",
-      remember: ref(false),
+      remember: false,
     };
   },
   methods: {
@@ -80,29 +80,30 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.box {
+<style lang="less">
+.app-box {
+  text-align: center;
   width: 400px;
   margin: auto;
   margin-top: 30px;
-}
-.el-input {
-  margin-bottom: 20px;
-}
-.check {
-  float: left;
-}
-.check span {
-  font-size: 14px;
-}
-.for {
-  float: right;
-}
-.re {
-  height: 60px;
-}
-.el-button {
-  margin-bottom: 15px;
-  border-radius: 25px;
+  .el-input {
+    margin-bottom: 20px;
+  }
+  .check {
+    float: left;
+  }
+  .check span {
+    font-size: 14px;
+  }
+  .for {
+    float: right;
+  }
+  .re {
+    height: 60px;
+  }
+  .el-button {
+    margin-bottom: 15px;
+    border-radius: 25px;
+  }
 }
 </style>

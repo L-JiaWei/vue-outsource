@@ -1,6 +1,6 @@
 <template>
-  <el-container>
-    <div class="TiT"><h1>Product Title and Logo etc</h1></div>
+  <el-container class="app-developer">
+    <h2>Product Title&Logo etc</h2>
     <el-header>
       <span class="fontSize">Are you a developer or client</span>
       <guide />
@@ -25,7 +25,7 @@
         placeholder="选择技术栈"
       >
         <el-option
-          v-for="item in options"
+          v-for="item in OPTIONS"
           :key="item.value"
           :label="item.label"
           :value="item.value"
@@ -61,10 +61,13 @@
 
 <script setup>
 import { ref } from "@vue/reactivity";
-import guide from "../components/guide.vue";
+import guide from "../components/Guide.vue";
 import { request } from "../network/request";
 import { useRoute } from "vue-router";
-const options = ref([
+import { useStore } from "vuex";
+const store = useStore();
+
+const OPTIONS = [
   {
     value: "Vue",
     label: "Vue",
@@ -89,95 +92,96 @@ const options = ref([
     value: "Java",
     label: "Java",
   },
-]);
+];
 const text = ref("");
-const StrText = ref("");
+
+const strText = ref("");
+
 const tags = ref([]);
+
 const route = useRoute();
+
 const settext = () => {
-  // console.log(String(text.value))
-  const StrText = String(text.value);
+  const strText = String(text.value);
 };
 
 const searchConfig = (value) => {
-  // console.log(value)
   if (tags.value.indexOf(value) === -1) {
     tags.value.push(value);
-    // console.log(tags.value.toString())
-    const StrTags = tags.value.toString();
+    const strTags = tags.value.toString();
   }
 };
+
 const handleClose = (tag) => {
   tags.value.splice(tags.value.indexOf(tag), 1);
 };
-// console.log(route.params.username)
-// console.log(route.params.email)
+
 const submit = async () => {
-  const i = await request({
+  // 目前存在一定问题，之前在signup界面进行注册，username，email，pw，new_user已经写入数据库，这里再写一遍？？
+  const res = await request({
     method: "post",
-    url: "user/login",
+    url: "user/register",
     params: {
-      username: route.params.username,
-      email: route.params.email,
-      description: StrText,
-      skillTags: StrTags,
+      username: store.state.username,
+      email: store.state.email,
+      new_user: store.state.new_user,
+      description: strText,
+      skillTags: tags.value,
       location: "",
-      new_user: false,
     },
   });
 };
 </script>
 
-<style scoped>
-.TiT {
-  font-size: 36px;
-}
-.textarea {
-  width: 400px;
-  height: auto;
-  margin-bottom: 15px;
-}
-.fontSize {
-  font-size: 24px;
-}
-.tag-border {
-  width: 400px;
-  height: 200px;
-  border: 1px solid var(--el-border-color-base);
-  margin: 10px auto;
-}
-.box {
-  width: 400px;
-  height: 100px;
-  border: 1px solid var(--el-border-color-base);
-  margin: 10px auto;
-  text-align: left;
-}
-.tag-border .el-select {
-  float: left;
-}
-.el-select {
-  float: none !important;
-}
-.WidSelect {
-  width: 400px;
-  height: auto;
-}
-.el-select .el-input {
-  display: flex;
-  width: 400px;
-  height: auto;
-}
-.el-tag {
-  float: left;
-  margin: 10px 0 0 10px;
-  border-radius: 20px;
-  width: 140px;
-  height: auto;
-  font-weight: bold;
-  font-size: large;
-}
-.el-button {
-  border-radius: 25px;
+<style lang = "less">
+.app-developer {
+  .textarea {
+    width: 400px;
+    height: auto;
+    margin-bottom: 15px;
+  }
+  .el-main > .fontSize {
+    font-size: 15px;
+  }
+  .tag-border {
+    width: 400px;
+    height: 200px;
+    border: 1px solid var(--el-border-color-base);
+    margin: 10px auto;
+  }
+  .box {
+    width: 400px;
+    height: 100px;
+    border: 1px solid var(--el-border-color-base);
+    margin: 10px auto;
+    text-align: left;
+  }
+  .tag-border .el-select {
+    float: left;
+  }
+  .el-select {
+    float: none !important;
+  }
+  .WidSelect {
+    width: 400px;
+    height: auto;
+  }
+  .el-select .el-input {
+    display: flex;
+    width: 400px;
+    height: auto;
+  }
+  .el-tag {
+    float: left;
+    margin: 10px 0 0 10px;
+    border-radius: 20px;
+    width: 140px;
+    height: auto;
+    font-weight: bold;
+    font-size: large;
+  }
+  .el-button {
+    border-radius: 25px;
+  }
 }
 </style>

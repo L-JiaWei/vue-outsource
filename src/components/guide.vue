@@ -1,35 +1,33 @@
 <template>
-  <el-container>
+  <div class="app-guide">
     <el-main>
-      <el-button-group class="btn">
-        <el-button round  :class="{'active':isactive}" @click="toClient">client</el-button>
-        <el-button round  :class="{'active':isact}" @click="toDeveloper">developer</el-button>
-      </el-button-group>
+      <el-radio-group v-model="radio">
+        <el-radio-button label="client" @click="toClient"></el-radio-button>
+        <el-radio-button
+          label="developer"
+          @click="toDeveloper"
+        ></el-radio-button>
+      </el-radio-group>
     </el-main>
-  </el-container>
+  </div>
 </template>
 
 <script setup>
-import { ref } from "vue"
-import { useRouter } from 'vue-router';
-const router = useRouter()
-let isactive = ref(false)
-let isact = ref(true)
+import { ref, watch } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const radio = ref("client");
+
 const toClient = () => {
-  isactive.value=true
-  isact.value=false
-  router.push({path: "/client"})
-}
+  router.push({ name: "client" });
+};
+
 const toDeveloper = () => {
-  isactive.value=false
-  isact.value=true
-  router.push({path: "/developer"})
-}
+  router.push({ name: "developer" });
+};
 </script>
 
-<style scoped>
-.active{
-  color: aliceblue;
-  background-color: #409EFF;
-}
+<style lang="less">
 </style>
