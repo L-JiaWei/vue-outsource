@@ -51,8 +51,8 @@ import {
   ElCheckbox,
 } from "element-plus";
 import "element-plus/dist/index.css";
-import { request } from "../network/request";
-import index from "../components/index.vue";
+import { userlogin } from "../network/dataSource";
+import index from "../components/LoginIndex.vue";
 
 const refruleForm = ref(null);
 
@@ -96,9 +96,7 @@ const login = async () => {
     (ruleForm.email !== "" && ruleForm.email !== null) ||
     (ruleForm.password !== "" && ruleForm.password !== null)
   ) {
-    const res = await request({
-      method: "get",
-      url: "user/login",
+    const res = await userlogin({
       params: {
         email: ruleForm.email,
         password: ruleForm.password,

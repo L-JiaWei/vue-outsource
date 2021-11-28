@@ -62,7 +62,7 @@
 <script setup>
 import { ref } from "@vue/reactivity";
 import guide from "../components/Guide.vue";
-import { request } from "../network/request";
+import { userSignUp } from "../network/dataSource";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const store = useStore();
@@ -118,9 +118,7 @@ const handleClose = (tag) => {
 
 const submit = async () => {
   // 目前存在一定问题，之前在signup界面进行注册，username，email，pw，new_user已经写入数据库，这里再写一遍？？
-  const res = await request({
-    method: "post",
-    url: "user/register",
+  const res = await userSignUp({
     params: {
       username: store.state.username,
       email: store.state.email,

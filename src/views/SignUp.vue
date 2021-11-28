@@ -16,16 +16,16 @@
           autocomplete="off"
         />
       </el-form-item>
-      <el-form-item label-width="0px" prop="name">
+      <el-form-item label-width="0px" prop="username">
         <el-input
-          v-model="ruleForm.name"
+          v-model="ruleForm.username"
           placeholder="Username"
           autocomplete="off"
         />
       </el-form-item>
-      <el-form-item prop="pass" label-width="0px">
+      <el-form-item prop="password" label-width="0px">
         <el-input
-          v-model="ruleForm.pass"
+          v-model="ruleForm.password"
           placeholder="Password"
           show-password
           autocomplete="off"
@@ -47,8 +47,8 @@
 <script setup>
 import { ref, reactive } from "vue";
 import { ElMessage } from "element-plus";
-import { request } from "../network/request";
-import index from "../components/index.vue";
+import { userSignUp } from "../network/dataSource";
+import index from "../components/LoginIndex.vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 const store = useStore();
@@ -56,10 +56,11 @@ const store = useStore();
 const router = useRouter();
 
 const ruleForm = reactive({
-  pass: "",
+  password: "",
   checkPass: "",
   email: "",
-  name: "",
+  username: "",
+  new_user: true,
 });
 
 const refruleForm = ref(null);
@@ -79,7 +80,7 @@ const passwordValidate = (rule, value, callback) => {
 const checkPassValidate = (rule, value, callback) => {
   if (value === "") {
     callback(new Error("Please input the password again"));
-  } else if (value !== ruleForm.pass) {
+  } else if (value !== ruleForm.password) {
     callback(new Error("Two inputs don't match!"));
   } else {
     callback();
@@ -109,37 +110,33 @@ const nameValidate = (rule, value, callback) => {
 };
 
 const formRules = {
-  pass: [{ validator: passwordValidate, trigger: "blur" }],
+  password: [{ validator: passwordValidate, trigger: "blur" }],
   checkPass: [{ validator: checkPassValidate, trigger: "blur" }],
   email: [{ validator: emailValidate, trigger: "blur" }],
-  name: [{ validator: nameValidate, trigger: "blur" }],
+  username: [{ validator: nameValidate, trigger: "blur" }],
 };
 
 const signUp = async () => {
   if (
     ruleForm.email !== "" &&
-    ruleForm.name !== "" &&
-    ruleForm.pass !== "" &&
+    ruleForm.username !== "" &&
+    ruleForm.password !== "" &&
     ruleForm.checkPass !== "" &&
-    ruleForm.pass === ruleForm.checkPass
+    ruleForm.password === ruleForm.checkPass
   ) {
-    const res = await request({
-      method: "POST",
-      url: "user/register",
+    const res = await userSignUp({
       params: {
-        username: ruleForm.name,
+        username: ruleForm.username,
         password: ruleForm.checkPass,
         email: ruleForm.email,
-        new_user: false,
+        new_user: ruleForm.new_user,
       },
     });
-    if (res.data.statusCode === 1) {
+    if (true) {
       ElMessage.success("reg was successful");
-      store.commit("storageSignUser", {
-        username: ruleForm.name,
-        email: ruleForm.email,
-        new_user: false,
-      });
+      let { username, email, new_user } = ruleForm;
+      store.state.registerUserInfo = { username, email, new_user };
+      console.log(store.state.registerUserInfo);
       router.push({
         name: "developer",
       });
