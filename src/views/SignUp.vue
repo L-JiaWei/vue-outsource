@@ -3,11 +3,10 @@
     <h2>Product Title&Logo etc</h2>
     <h5>Sign up for free</h5>
     <el-form
-      ref="ruleForm"
+      ref="refruleForm"
       :model="ruleForm"
       status-icon
-      :rules="rules"
-      label-width="120px"
+      :rules="formRules"
       class="demo-ruleForm"
     >
       <el-form-item label-width="0px" prop="email">
@@ -41,123 +40,117 @@
         />
       </el-form-item>
     </el-form>
-    <el-button type="primary" round @click="sign">sign up</el-button>
+    <el-button type="primary" round @click="signUp">sign up</el-button>
   </div>
   <index />
 </template>
-<script>
-import { ElForm, ElInput, ElFormItem, ElButton, ElMessage } from "element-plus";
-import { request } from "../network/request.js";
+<script setup>
+import { ref, reactive } from "vue";
+import { ElMessage } from "element-plus";
+import { request } from "../network/request";
 import index from "../components/index.vue";
 import { useStore } from "vuex";
-export default {
-  components: {
-    ElForm,
-    ElInput,
-    ElFormItem,
-    ElButton,
-    ElMessage,
-    index,
-  },
-  data() {
-    const validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("Please input the password"));
-      } else {
-        if (this.ruleForm.checkPass !== "") {
-          this.$refs.ruleForm.validateField("checkPass");
-        }
-        callback();
-      }
-    };
+import { useRouter } from "vue-router";
+const store = useStore();
 
-    const validatePass2 = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("Please input the password again"));
-      } else if (value !== this.ruleForm.pass) {
-        callback(new Error("Two inputs don't match!"));
-      } else {
-        callback();
-      }
-    };
+const router = useRouter();
 
-    const validatePass3 = (rule, value, callback) => {
-      const reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
-      if (value === "") {
-        callback(new Error("Please input the email"));
-      } else if (value !== "" && reg.test(value)) {
-        callback();
-      } else {
-        callback(new Error("Please enter the correct email format"));
-      }
-    };
+const ruleForm = reactive({
+  pass: "",
+  checkPass: "",
+  email: "",
+  name: "",
+});
 
-    const validatePass4 = (rule, value, callback) => {
-      const reg = /^[\u4e00-\u9fa5]|^[0-9a-zA-Z_]{0,}$/;
-      if (value === "") {
-        callback(new Error("please enter one user name "));
-      } else if (value !== "" && reg.test(value)) {
-        callback();
-      } else {
-        callback(new Error("The user name should be less than 8"));
-      }
-    };
+const refruleForm = ref(null);
 
-    return {
-      input1: "",
-      ruleForm: {
-        pass: "",
-        checkPass: "",
-        email: "",
-        name: "",
+// 指定表单验证规则
+const passwordValidate = (rule, value, callback) => {
+  if (value === "") {
+    callback(new Error("Please input the password"));
+  } else {
+    if (ruleForm.checkPass !== "") {
+      refruleForm.value.validateField("checkPass");
+    }
+    callback();
+  }
+};
+
+const checkPassValidate = (rule, value, callback) => {
+  if (value === "") {
+    callback(new Error("Please input the password again"));
+  } else if (value !== ruleForm.pass) {
+    callback(new Error("Two inputs don't match!"));
+  } else {
+    callback();
+  }
+};
+
+const emailValidate = (rule, value, callback) => {
+  const reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+  if (value === "") {
+    callback(new Error("Please input the email"));
+  } else if (value !== "" && reg.test(value)) {
+    callback();
+  } else {
+    callback(new Error("Please enter the correct email format"));
+  }
+};
+
+const nameValidate = (rule, value, callback) => {
+  const reg = /^[\u4e00-\u9fa5]|^[0-9a-zA-Z_]{0,}$/;
+  if (value === "") {
+    callback(new Error("please enter one user name "));
+  } else if (value !== "" && reg.test(value)) {
+    callback();
+  } else {
+    callback(new Error("The user name should be less than 8"));
+  }
+};
+
+const formRules = {
+  pass: [{ validator: passwordValidate, trigger: "blur" }],
+  checkPass: [{ validator: checkPassValidate, trigger: "blur" }],
+  email: [{ validator: emailValidate, trigger: "blur" }],
+  name: [{ validator: nameValidate, trigger: "blur" }],
+};
+
+const signUp = async () => {
+  if (
+    ruleForm.email !== "" &&
+    ruleForm.name !== "" &&
+    ruleForm.pass !== "" &&
+    ruleForm.checkPass !== "" &&
+    ruleForm.pass === ruleForm.checkPass
+  ) {
+    const res = await request({
+      method: "POST",
+      url: "user/register",
+      params: {
+        username: ruleForm.name,
+        password: ruleForm.checkPass,
+        email: ruleForm.email,
+        new_user: false,
       },
-      rules: {
-        pass: [{ validator: validatePass, trigger: "blur" }],
-        checkPass: [{ validator: validatePass2, trigger: "blur" }],
-        email: [{ validator: validatePass3, trigger: "blur" }],
-        name: [{ validator: validatePass4, trigger: "blur" }],
-      },
-    };
-  },
-  methods: {
-    async sign() {
-      if (
-        this.ruleForm.email !== "" &&
-        this.ruleForm.name !== "" &&
-        this.ruleForm.pass !== "" &&
-        this.ruleForm.checkPass !== ""
-      ) {
-        const res = await request({
-          method: "POST",
-          url: "user/register",
-          params: {
-            username: this.ruleForm.name,
-            password: this.ruleForm.checkPass,
-            email: this.ruleForm.email,
-            new_user: false,
-          },
-        });
-        if (true) {
-          ElMessage.success("reg was successful");
-          this.$store.commit("storageSignUser", {
-            username: this.ruleForm.name,
-            email: this.ruleForm.email,
-            new_user: false,
-          });
-          this.$router.push({
-            name: "developer",
-          });
-        } else {
-          ElMessage.error("reg has failed");
-        }
-        return;
-      }
-      ElMessage.error("Please enter the content");
-    },
-  },
+    });
+    if (res.data.statusCode === 1) {
+      ElMessage.success("reg was successful");
+      store.commit("storageSignUser", {
+        username: ruleForm.name,
+        email: ruleForm.email,
+        new_user: false,
+      });
+      router.push({
+        name: "developer",
+      });
+    } else {
+      ElMessage.error("reg has failed");
+    }
+    return;
+  }
+  ElMessage.error("Please enter the correct content");
 };
 </script>
-
 
 <style lang="less">
 .app-signup {

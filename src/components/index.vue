@@ -9,27 +9,18 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
-export default defineComponent({
-  setup() {
-    const router = useRouter();
+const router = useRouter();
 
-    const login = () => {
-      router.push({ path: "/" });
-    };
+const login = () => {
+  router.push({ path: "/" });
+};
 
-    const reg = () => {
-      router.push({ path: "/signup" });
-    };
-
-    return {
-      login,
-      reg,
-    };
-  },
-});
+const reg = () => {
+  router.push({ path: "/signup" });
+};
 </script>
 
 <style lang= "less">
