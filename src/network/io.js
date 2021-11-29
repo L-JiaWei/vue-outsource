@@ -1,9 +1,13 @@
 import axios from "axios";
-
+import qs from 'qs'
 export const instance = axios.create({
-    baseURL: 'http://106.55.181.102/one',
+    baseURL: 'http://10.1.86.156:8080',
     timeout: 5000,
-    withCredentials: true
+    withCredentials: true,
+    headers: { 
+    'Content-Type': "application/x-www-form-urlencoded",
+    'Accept': 'application/json'
+}
 })
 
 instance.interceptors.request.use(config => {
@@ -25,11 +29,11 @@ const hendleError = (err) => {
 }
 
 export default {
-    get(url, params = {}) {
-        return instance.get(url, params).catch(hendleError)
+    get(url, options = {}) {
+        return instance.get(url, options).catch(hendleError)
     },
-    post(url, params = {}) {
-        return instance.post(url, params).catch(hendleError)
+    post(url, options ={}) {
+        return instance.post(url,qs.stringify(options)).catch(hendleError)
     },
     put(url, data = {}, config = {}) {
         return instance.put(url, data, config).catch(hendleError)
