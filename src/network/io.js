@@ -1,7 +1,7 @@
 import axios from "axios";
 import qs from 'qs'
 export const instance = axios.create({
-    baseURL: 'http://10.1.86.156:8080',
+    baseURL: 'http://10.1.86.233:8080',
     timeout: 5000,
     withCredentials: true,
     headers: { 

@@ -3,6 +3,7 @@ import Login from '../views/Login.vue'
 import SignUp from '../views/SignUp.vue'
 import Client from '../views/Client.vue'
 import Developer from '../views/Developer.vue'
+import Experience from '../components/Experience.vue'
 const routes = [{
         path: '/',
         name: 'login',
@@ -21,6 +22,11 @@ const routes = [{
         path: "/developer",
         name: "developer",
         component: Developer
+    },
+    {
+        path:'/experience',
+        name:'experience',
+        component:Experience
     },
     {
         path: '/:pathMatch(.*)',

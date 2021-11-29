@@ -53,7 +53,9 @@ import {
 import "element-plus/dist/index.css";
 import { userlogin } from "../network/dataSource";
 import index from "../components/LoginIndex.vue";
-
+import { useRouter } from "vue-router";
+const router = useRouter()
+import Experience from "../components/Experience.vue"
 const refruleForm = ref(null);
 
 const ruleForm = reactive({
@@ -105,6 +107,7 @@ const login = async () => {
     });
     if (res.data.statusCode === 1) {
       ElMessage.success("Login successful");
+      router.push({path:'/experience'})
     } else {
       ElMessage.error("Login failed");
     }
