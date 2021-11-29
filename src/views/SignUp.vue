@@ -125,14 +125,13 @@ const signUp = async () => {
     ruleForm.password === ruleForm.checkPass
   ) {
     const res = await userSignUp({
-      params: {
         username: ruleForm.username,
         password: ruleForm.checkPass,
         email: ruleForm.email,
-        new_user: ruleForm.new_user,
-      },
+        new_user: true,
     });
-    if (true) {
+    console.log(res)
+    if (res.data.statusCode === 1) {
       ElMessage.success("reg was successful");
       let { username, email, new_user } = ruleForm;
       store.state.registerUserInfo = { username, email, new_user };
