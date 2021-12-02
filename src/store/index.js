@@ -2,13 +2,18 @@ import { createStore } from 'vuex'
 
 export default createStore({
     state: {
-        registerUserInfo: {}
-        //状态信息
-        //单一状态树
+        ltemLinkList:[]
     },
-    mutations: {},
+    mutations: {
+        addItemLink(state,task){
+            state.ltemLinkList.push(task)
+            console.log(state.ltemLinkList)
+        },
+        deleteItem(state,index){
+            state.ltemLinkList.splice(index,1)
+        }
+    },
     actions: {
-        //异步操作
     },
     modules: {}
 })
