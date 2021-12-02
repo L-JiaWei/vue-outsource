@@ -16,7 +16,7 @@ const router = useRouter();
 const login = () => {
   router.push({ path: "/" });
 };
-
+     
 const reg = () => {
   router.push({ path: "/signup" });
 };

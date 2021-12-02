@@ -1,10 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login.vue'
 import SignUp from '../views/SignUp.vue'
+import Experience from '../components/Experience.vue'
 import RegisteredDetails from '../views/RegisteredDetails.vue'
 import MyProfile from '../views/MyProfile.vue'
-// import Client from '../views/Client.vue'
-// import Developer from '../views/Developer.vue'
 const routes = [{
         path: '/',
         name: 'login',
@@ -24,6 +23,11 @@ const routes = [{
         path: "/MyProfile",
         name: "MyProfile",
         component: MyProfile
+    },
+    {
+        path: '/experience',
+        name: 'experience',
+        component: Experience
     },
     {
         path: '/:pathMatch(.*)',

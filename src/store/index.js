@@ -11,17 +11,21 @@ export default createStore({
             location: "中国",
             salary: "10",
             birthday: "2020.12.1"
-        }
-        //状态信息
-        //单一状态树
+        },
+        ltemLinkList: []
     },
     mutations: {
         updateUserInfo(state, task) {
             state.userInfo = task
+        },
+        addItemLink(state, task) {
+            state.ltemLinkList.push(task)
+            console.log(state.ltemLinkList)
+        },
+        deleteItem(state, index) {
+            state.ltemLinkList.splice(index, 1)
         }
     },
-    actions: {
-        //异步操作
-    },
+    actions: {},
     modules: {}
 })
