@@ -10,25 +10,14 @@
       class="demo-ruleForm"
     >
       <el-form-item prop="email" label-width="0px">
-        <el-input
-          v-model="ruleForm.email"
-          placeholder="Please enter email address"
-        />
+        <el-input v-model="ruleForm.email" placeholder="Please enter email address" />
       </el-form-item>
       <el-form-item prop="password" label-width="0px">
-        <el-input
-          v-model="ruleForm.password"
-          placeholder="Please input a password"
-          show-password
-        />
+        <el-input v-model="ruleForm.password" placeholder="Please input a password" show-password />
       </el-form-item>
       <div class="re">
         <div class="check">
-          <el-checkbox
-            name="reading"
-            v-model="ruleForm.remember"
-            label="remeber me"
-          />
+          <el-checkbox name="reading" v-model="ruleForm.remember" label="remeber me" />
         </div>
         <div class="for">
           <el-link type="primary">primary</el-link>
@@ -53,7 +42,8 @@ import {
 import "element-plus/dist/index.css";
 import { userlogin } from "../network/dataSource";
 import index from "../components/LoginIndex.vue";
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 const refruleForm = ref(null);
 
 const ruleForm = reactive({
@@ -105,6 +95,10 @@ const login = async () => {
     });
     if (res.data.statusCode === 1) {
       ElMessage.success("Login successful");
+      localStorage.setItem("outUserInfo",JSON.stringify(res.data.data))
+      router.push({
+        name: "MyProfile",
+      });
     } else {
       ElMessage.error("Login failed");
     }

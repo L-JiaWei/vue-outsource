@@ -1,8 +1,12 @@
 <template>
   <router-view />
+  <!-- <PersonalInformation /> -->
+  <!-- <Navigation /> -->
 </template>
 
 <script setup>
+import Navigation from './components/Navigation.vue';
+import PersonalInformation from './components/PersonalInformation.vue';
 </script>
 
 <style lang="less">

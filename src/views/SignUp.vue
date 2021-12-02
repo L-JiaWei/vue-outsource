@@ -134,10 +134,10 @@ const signUp = async () => {
     if (res.data.statusCode === 1) {
       ElMessage.success("reg was successful");
       let { username, email, new_user } = ruleForm;
-      store.state.registerUserInfo = { username, email, new_user };
-      console.log(store.state.registerUserInfo);
+      store.state.userInfo = { username, email, new_user };
+      console.log(store.state.userInfo);
       router.push({
-        name: "developer",
+        name: "RegisteredDetails",
       });
     } else {
       ElMessage.error("reg has failed");

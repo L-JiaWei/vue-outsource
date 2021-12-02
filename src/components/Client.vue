@@ -1,10 +1,5 @@
 <template>
   <el-container class="app-client">
-    <h2>Product Title&Logo etc</h2>
-    <el-header>
-      <span class="fontSize">Are you a developer or client</span>
-      <guide />
-    </el-header>
     <el-main>
       <p class="fontSize">
         As a client, you can post your project to our <br />platform and let
@@ -12,13 +7,20 @@
       </p>
     </el-main>
     <el-footer>
-      <el-button type="primary">continue</el-button>
+      <el-button type="primary" @click="toMyProfile">Continue</el-button>
     </el-footer>
   </el-container>
 </template>
 
 <script setup>
-import guide from "../components/Guide.vue";
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
+
+const toMyProfile = () => {
+  router.push({ name: "MyProfile" })//////后面应该改为跳转到主页,暂时跳转到个人页
+}
+
 </script>
 
 <style lang="less">

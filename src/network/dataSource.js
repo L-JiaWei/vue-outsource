@@ -6,4 +6,7 @@ const userlogin = (params) => {
 const userSignUp = (params) => {
     return io.post('user/register', params)
 }
-export { userlogin, userSignUp }
+const userSignOut = (params) => {
+    return io.get('user/logout', params)
+}
+export { userlogin, userSignUp, userSignOut }
