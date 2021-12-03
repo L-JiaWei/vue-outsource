@@ -7,7 +7,7 @@
             </div>
         </div>
         <div class="box">
-            <div v-if="AddTo">
+            <div v-if="obj.AddTo">
                 <el-card
                   shadow="hover"
                     v-for="(item,index) in showItem"
@@ -39,15 +39,15 @@
             <el-pagination 
                 background layout="prev, pager, next"
                 :page-count="pageCount"
-                :current-page="currentPage"
+                :current-page="obj.currentPage"
                 @current-change="currentChange"
-                onUpdate:currentPage
+                onUpdate:obj.currentPage
                 hide-on-single-page="true"
-                v-if="isOpenPagination" 
+                v-if="obj.isOpenPagination" 
             />
         </footer>
         <el-dialog
-            v-model="dialogVisible"
+            v-model="obj.dialogVisible"
             title="Project information"
             width="40%"
             :before-close="Empty"
@@ -89,7 +89,7 @@
                     <el-input placeholder="project description" type="textarea" :rows="3" v-model="ruleForm.description" />
                 </el-form-item>
             </el-form>
-            <el-button type="default" round size='small' @click="cancel">Cancel</el-button>
+            <el-button type="default" round size='small' @click="Empty">Cancel</el-button>
             <el-button type="primary" round size='small' @click="confirm">Confirm</el-button>
         </el-dialog>
     </div>
@@ -97,31 +97,30 @@
 </template>
 
 <script setup>
-import { reactive, ref,computed,watch,watchEffect  } from 'vue'
+import { reactive, ref,computed, } from 'vue'
 import { useStore } from 'vuex'
 import reviews from './Reviews.vue'
 
 const store = useStore()
 
-const dialogVisible = ref(false)
-
-const isOpenPagination = ref(true)
-
-let AddTo = ref(false)
+const obj = reactive({
+    dialogVisible:false,
+    isOpenPagination:true,
+    currentPage:1,
+    AddTo:false
+})
 
 const itemList = computed(() => store.state.ltemLinkList)
 
 //监听 current-page 变更的事件（onUpdate:currentPage）
 const currentChange = res => {
-    currentPage.value =res
+    obj.currentPage =res
 }
-
-let currentPage = ref(1)
 
 const showItem = computed(() => {
     return itemList.value.slice(
-        (currentPage.value-1)*2,
-        currentPage.value*2
+        (obj.currentPage-1)*2,
+        obj.currentPage*2
         
     )
 })
@@ -129,7 +128,7 @@ const showItem = computed(() => {
 let pageCount = computed(() => Math.ceil(itemList.value.length/2))
 
 const Add = () => {
-    dialogVisible.value=true
+    obj.dialogVisible = true
 }
 
 const initFrom = { 
@@ -146,26 +145,21 @@ let ruleForm = ref({
 
 const confirm = () => {
     store.commit("addItemLink",ruleForm.value)
-    AddTo.value = true
-    dialogVisible.value=false
-    ruleForm.value = {...initFrom}
-}
-
-const cancel = () => {
-    dialogVisible.value=false
+    obj.AddTo = true
+    obj.dialogVisible=false
     ruleForm.value = {...initFrom}
 }
 
 const Empty = () => {
     ruleForm.value = {...initFrom}
-    dialogVisible.value=false
+    obj.dialogVisible=false
 
 }
 
 const del = (index) => {
     store.commit("deleteItem",index)
     if(itemList.value.length<1){
-      AddTo.value = false
+      obj.AddTo = false
     }
 }
 
