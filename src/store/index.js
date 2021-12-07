@@ -6,17 +6,21 @@ export default createStore({
         userInfo: {
             email: "asdfsd@qq.com",
             new_user: true,
-            userName: "asdf",
-            description: "asdfsdfsdf",
+            userName: "帅哥",
+            description: "前端",
             location: "中国",
-            salary: "10",
-            birthday: "2020.12.1"
+            salary: "2000",
+            birthday: "2021-12-7"
         },
         ltemLinkList: []
     },
     mutations: {
         updateUserInfo(state, task) {
-            state.userInfo = task
+            for (let key in task) {
+                state.userInfo[key] = task[key]
+            }
+            console.log(state.userInfo)
+
         },
         addItemLink(state, task) {
             state.ltemLinkList.push(task)

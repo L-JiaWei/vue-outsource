@@ -1,5 +1,4 @@
 <template>
-    <Navigation />
     <div class="app-Information">
         <div class="bg-Inf">
             <div class="ZhanWei"></div>
@@ -20,38 +19,43 @@
             <div class="head-portrait">
                 <el-upload
                     class="avatar-uploader"
-                    action="https://jsonplaceholder.typicode.com/posts/"
                     :show-file-list="false"
+                    action="https://jsonplaceholder.typicode.com/posts/"
+                    with-credentials='false'
                     :on-success="handleAvatarSuccess"
                     thumbnail-mode="true"
                     :before-upload="beforeAvatarUpload"
                 >
-                    <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                    <img v-if="state.imageUrl" :src="state.imageUrl" class="avatar" />
                     <el-icon v-else class="avatar-uploader-icon">
                         <avatar />
                     </el-icon>
                 </el-upload>
             </div>
             <div class="Textarea">
-                <h4>个人简介：</h4>
-                <p>{{  userInfo.description }}</p>
+                <el-card class="box-card" shadow="never">
+                    <h4>个人简介：</h4>
+                    <span>{{ userInfo.description }}</span>
+                </el-card>
             </div>
         </div>
         <div class="PersonInfo">
-            <ul>
-                <li>
-                    <p>Location:{{ userInfo.location }}</p>
-                </li>
-                <li>
-                    <p>Ratings:(？review)</p>
-                </li>
-                <li>
-                    <p>{{ userInfo.salary }} $/Hour</p>
-                </li>
-                <li>
-                    <p>Birthday:{{ userInfo.birthday }}</p>
-                </li>
-            </ul>
+            <el-card class="box-card" shadow="never">
+                <ul>
+                    <li>
+                        <p>Location:{{ userInfo.location }}</p>
+                    </li>
+                    <li>
+                        <p>Ratings:(？review)</p>
+                    </li>
+                    <li>
+                        <p>{{ userInfo.salary }} $/Hour</p>
+                    </li>
+                    <li>
+                        <p>Birthday:{{ userInfo.birthday }}</p>
+                    </li>
+                </ul>
+            </el-card>
         </div>
     </div>
 
@@ -66,7 +70,7 @@
                     v-model="state.editUserInfo.description"
                     placeholder="请输入个人简介"
                     :autosize="{ minRows: 3, maxRows: 3 }"
-                    maxlength="255"
+                    maxlength="35"
                     type="textarea"
                 />
             </el-form-item>
@@ -77,10 +81,18 @@
                 <el-input v-model="state.editUserInfo.salary" placeholder="请输入时薪" />
             </el-form-item>
             <el-form-item label>
-                <el-input v-model="state.editUserInfo.birthday" placeholder="请输入生日（月日年）" />
+                <!-- <el-input v-model="state.editUserInfo.birthday" placeholder="请输入生日（月日年）" /> -->
+                <el-date-picker
+                    v-model="state.editUserInfo.birthday"
+                    type="date"
+                    placeholder="请输入生日"
+                    format="YYYY/MM/DD"
+                    value-format="YYYY-MM-DD"
+                    @change="kk"
+                ></el-date-picker>
             </el-form-item>
             <el-form-item label>
-                <el-button type="primary" @click="Submit">保存</el-button>
+                <el-button type="primary" @click="submit">保存</el-button>
                 <el-button type="primary" @click="state.editInfo = false">退出</el-button>
             </el-form-item>
         </el-form>
@@ -98,6 +110,7 @@ import { ElMessage } from "element-plus";
 const store = useStore()
 
 const state = reactive({
+    imageUrl: '',
     editInfo: ref(false),
     editUserInfo: {
         email: "",
@@ -105,8 +118,8 @@ const state = reactive({
         userName: "",
         description: "",
         location: "",
-        salary:"",
-        birthday: ""
+        salary: "",
+        birthday: '',
     }
 })
 
@@ -114,18 +127,38 @@ const state = reactive({
 
 const userInfo = computed(() => store.state.userInfo)
 
-onMounted(()=>{
-    // console.log(userLocalInfo != "")
+onMounted(() => {
+    // console.log(k != "")
     // if(userLocalInfo != ""){
 
     // }   
-    for(let key in store.state.userInfo){
+    for (let key in store.state.userInfo) {
         state.editUserInfo[key] = store.state.userInfo[key]
     }
     console.log(state.editUserInfo)
 })
 
-const Submit = async () => {
+const handleAvatarSuccess = (res, file) => {
+    // console.log(URL.createObjectURL(file.raw))
+    state.imageUrl = URL.createObjectURL(file.raw)
+    console.log(state.imageUrl)
+}
+
+const beforeAvatarUpload = (file) => {
+    console.log(file)
+    const isJPG = file.type === 'image/jpeg'
+    const isLt2M = file.size / 1024 / 1024 < 2
+
+    if (!isJPG) {
+        this.$message.error('Avatar picture must be JPG format!')
+    }
+    if (!isLt2M) {
+        this.$message.error('Avatar picture size can not exceed 2MB!')
+    }
+    return isJPG && isLt2M
+}
+
+const submit = async () => {
     // store.commit("updateUserInfo",state.editUserInfo)
     console.log(state.editUserInfo)
     const res = await userSignUp({
@@ -138,15 +171,13 @@ const Submit = async () => {
         birthday: state.editUserInfo.birthday
     })
     console.log(res)
-    // if (res.data.statusCode === 1) {
-    //     ElMessage.success("User data submitted successfully");
-    //     ///后端需重写接口，返回所有的UserInfo，然后前端进行vuex储存（UserInfo），用computed对UserInfo进行数据监听，页面上插值表达式进行渲染
-    //     let { username, password, email, description, skillTags, location, salary, birthday } = res.data.Info
-    //     store.state.editUserInfo = { username, password, email, description, skillTags, location, salary, birthday }
-    //     console.log(editUserInfo)
-    // } else {
-    //     ElMessage.error("reg has failed");
-    // }
+    if (res.data.statusCode === 1) {
+        ElMessage.success("User data submitted successfully");
+        store.commit("updateUserInfo", state.editUserInfo)
+        console.log(store.state.userInfo)
+    } else {
+        ElMessage.error("reg has failed");
+    }
 }
 </script>
 
@@ -156,13 +187,14 @@ const Submit = async () => {
 <style lang="less">
 .app-Information {
     display: flex;
-    // justify-content: space-around;
     flex-direction: column;
     width: 60%;
     height: auto;
-    margin: 0 auto;
+    margin: 0 auto -80px auto;
     .bg-Inf {
-        background-image: url(../assets/BgInformation.png);
+        background-image: url(../assets/bg2.jpg);
+        background-repeat: no-repeat;
+        background-size: 100%;
         width: 100%;
         height: 220px;
         display: flex;
@@ -182,10 +214,6 @@ const Submit = async () => {
     }
     .el-button-group {
         margin: 0 20px 20px 0;
-        .el-button {
-            background: gray;
-            border: gray;
-        }
     }
 }
 .pic-Inf {
@@ -197,7 +225,7 @@ const Submit = async () => {
         width: 22%;
         height: 200px;
         position: relative;
-        top: -101px;
+        top: -102px;
         margin-left: 20px;
         .avatar-uploader .el-upload {
             border: 1px solid gray;
@@ -215,9 +243,11 @@ const Submit = async () => {
             width: 165px;
             height: 195px;
             text-align: center;
+            position: relative;
+            top: 17px;
         }
         .avatar {
-            width: 22%;
+            width: 100%;
             height: 195px;
             display: block;
         }
@@ -225,14 +255,19 @@ const Submit = async () => {
     .Textarea {
         width: 78%;
         height: 93px;
-        // position: relative;
-        // left: 200px;
-        border: 1px solid #000;
-        border-radius: 4px;
-        // float: right;
-        > h4 {
-            text-align: left;
-            margin: 10px 0 0 10px;
+        .el-card__body {
+            padding: 0px;
+            overflow: hidden;
+            height: 93px;
+            > h4 {
+                float: left;
+                padding-left: 10px;
+            }
+            > span {
+                text-align: left;
+                display: block;
+                margin: 20px 10px 2px 0;
+            }
         }
     }
 }
@@ -241,11 +276,11 @@ const Submit = async () => {
     top: -105px;
     width: 100%;
     height: auto;
-    float: left;
-    border: solid 1px black;
-    > ul {
-        text-align: left;
-        list-style: none;
+    .el-card__body {
+        > ul {
+            text-align: left;
+            list-style-type: none;
+        }
     }
 }
 </style>

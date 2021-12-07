@@ -115,7 +115,9 @@ const formRules = {
   email: [{ validator: emailValidate, trigger: "blur" }],
   username: [{ validator: nameValidate, trigger: "blur" }],
 };
-
+// const signUp = () => {
+//   store.commit("updateUserInfo", ruleForm)
+// }
 const signUp = async () => {
   if (
     ruleForm.email !== "" &&
@@ -133,8 +135,7 @@ const signUp = async () => {
     console.log(res)
     if (res.data.statusCode === 1) {
       ElMessage.success("reg was successful");
-      let { username, email, new_user } = ruleForm;
-      store.state.userInfo = { username, email, new_user };
+      store.commit("updateUserInfo", ruleForm)
       console.log(store.state.userInfo);
       router.push({
         name: "RegisteredDetails",

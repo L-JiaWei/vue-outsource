@@ -4,16 +4,15 @@
       <div>
         <p class="fontSize">Complete your profile as a developer</p>
         <el-input
-          @change="EditText"
           class="textarea"
-          v-model="text"
+          v-model="state.textarea"
           placeholder="Self description"
           :autosize="{ minRows: 6, maxRows: 8 }"
           maxlength="255"
           type="textarea"
         />
       </div>
-      <el-select class="WidSelect" @change="SelectStack" filterable placeholder="选择技术栈">
+      <el-select class="WidSelect" @change="selectStack" filterable placeholder="选择技术栈">
         <el-option
           v-for="item in OPTIONS"
           :key="item.value"
@@ -23,11 +22,11 @@
       </el-select>
       <div class="tag-border">
         <el-tag
-          v-for="tag in tags"
+          v-for="tag in state.tags"
           :key="tag"
           closable
           :disable-transitions="false"
-          @close="DeleteTag(tag)"
+          @close="deleteTag(tag)"
         >{{ tag }}</el-tag>
       </div>
       <div class="box">
@@ -40,19 +39,20 @@
     <el-footer>
       <el-button-group>
         <el-button type="primary">Submit</el-button>
-        <el-button type="primary" @click="SubmitUserInfo">Save and Complete later</el-button>
+        <el-button type="primary" @click="submitUserInfo">Save and Complete later</el-button>
       </el-button-group>
     </el-footer>
   </el-container>
 </template>
 
 <script setup>
-import { ref } from "@vue/reactivity";
+import { reactive, ref } from "@vue/reactivity";
 import { userSignUp } from "../network/dataSource";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 const store = useStore();
+const router = useRouter();
 
 const OPTIONS = [
   {
@@ -80,50 +80,49 @@ const OPTIONS = [
     label: "Java",
   },
 ];
-const text = ref("");
+const state = reactive({
+  textarea: '',
+  // strText: '',
+  strTags: '',
+  tags: ref([]),
+})
 
-const strText = ref("");
-const strTags = ref("")
-
-const tags = ref([]);
-
-const router = useRouter();
-
-const EditText = () => {
-  const strText = String(text.value);
-};
-
-const SelectStack = (value) => {
-  console.log("111")
-  if (tags.value.indexOf(value) === -1) {
-    console.log("222")
-    tags.value.push(value);
-    const strTags = String(tags.value)
+const selectStack = (value) => {
+  if (state.tags.indexOf(value) === -1) {
+    state.tags.push(value);
+    console.log(String(state.tags))
+    state.strTags = String(state.tags)
   }
 };
 
-const DeleteTag = (tag) => {
-  tags.value.splice(tags.value.indexOf(tag), 1);
+const deleteTag = (tag) => {
+  state.tags.value.splice(state.tags.indexOf(tag), 1);
 };
 
-const SubmitUserInfo = async () => {
+const submitUserInfo = async () => {
   // 目前存在一定问题，之前在signup界面进行注册，username，email，pw，new_user已经写入数据库，这里再写一遍？？
   const res = await userSignUp({
-    email: store.state.email,
+    email: store.state.userInfo.email,
     new_user: false,
-    description: "strText",
-    skillTags: "strTags",
+    description: state.textarea,
+    skillTags: state.strTags,
     location: "",
   });
   console.log(res)
   if (res.data.statusCode === 1) {
     ElMessage.success("User data submitted successfully");
-    let {description, skillTags, location} = res.data.Info
+    let {textarea, strTags} = state
+    store.commit("updateUserInfo",{
+      // email: store.state.userInfo.email,
+      description: textarea,
+      skillTags: strTags,
+    })
     // store.state.registerUserInfo.{ description, skillTags, location }
-    console.log(store.state.registerUserInfo)
+    console.log(store.state.userInfo)
     router.push({ name: "MyProfile" })
   } else {
     ElMessage.error("User failed to submit information");
+    // router.push({ name: "MyProfile" })
   }
 
 };
