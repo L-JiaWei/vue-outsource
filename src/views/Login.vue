@@ -32,12 +32,7 @@
 <script setup>
 import { ref, reactive } from "vue";
 import {
-  ElForm,
-  ElInput,
-  ElLink,
-  ElButton,
-  ElMessage,
-  ElCheckbox,
+  ElMessage
 } from "element-plus";
 import "element-plus/dist/index.css";
 import { userlogin } from "../network/dataSource";

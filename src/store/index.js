@@ -28,6 +28,10 @@ export default createStore({
         },
         deleteItem(state, index) {
             state.ltemLinkList.splice(index, 1)
+        },
+        updataTasks(state,tasks){
+            console.log(tasks)
+            state.ltemLinkList = tasks
         }
     },
     actions: {},
