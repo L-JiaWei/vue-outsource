@@ -7,7 +7,7 @@
             </div>
         </div>
         <div class="box">
-            <div v-if="obj.AddTo">
+            <div v-if="showItem.length">
                 <el-card
                   shadow="hover"
                     v-for="(item,index) in showItem"
@@ -25,9 +25,7 @@
                     <el-descriptions-item label="Time：">{{item.date}}</el-descriptions-item>
                     <el-descriptions-item label="Entity：">{{item.entity}}</el-descriptions-item>
                     <el-descriptions-item label="Link：" type="primary"><el-link>{{"Http://"+item.link}}</el-link></el-descriptions-item>
-                    <el-descriptions-item label="Description：">
-                        {{item.description}}
-                    </el-descriptions-item>
+                    <el-descriptions-item label="Description：">{{item.description}}</el-descriptions-item>
                   </el-descriptions>
                 </el-card>
               </div>
@@ -97,17 +95,31 @@
 </template>
 
 <script setup>
-import { reactive, ref,computed, } from 'vue'
+import { reactive, ref,computed,onMounted } from 'vue'
 import { useStore } from 'vuex'
 import reviews from './Reviews.vue'
+
+onMounted(() => {
+	let mydata = localStorage.getItem("mydata")
+	console.log(mydata)
+	if(mydata){
+		mydata = JSON.parse(mydata)
+		store.commit("updataTasks",mydata)
+		console.log(store.state.ltemLinkList)
+	}
+})
+
+window.onbeforeunload = (event) => {
+	let mydata = store.state.ltemLinkList
+	localStorage.setItem("mydata",JSON.stringify(mydata))
+}
 
 const store = useStore()
 
 const obj = reactive({
     dialogVisible:false,
     isOpenPagination:true,
-    currentPage:1,
-    AddTo:false
+    currentPage:1
 })
 
 const itemList = computed(() => store.state.ltemLinkList)
@@ -121,7 +133,6 @@ const showItem = computed(() => {
     return itemList.value.slice(
         (obj.currentPage-1)*2,
         obj.currentPage*2
-        
     )
 })
 
@@ -145,7 +156,6 @@ let ruleForm = ref({
 
 const confirm = () => {
     store.commit("addItemLink",ruleForm.value)
-    obj.AddTo = true
     obj.dialogVisible=false
     ruleForm.value = {...initFrom}
 }
@@ -159,7 +169,6 @@ const Empty = () => {
 const del = (index) => {
     store.commit("deleteItem",index)
     if(itemList.value.length<1){
-      obj.AddTo = false
     }
 }
 
