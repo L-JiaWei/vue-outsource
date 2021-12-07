@@ -39,7 +39,7 @@
                 :page-count="pageCount"
                 :current-page="obj.currentPage"
                 @current-change="currentChange"
-                onUpdate:obj.currentPage
+                
                 hide-on-single-page="true"
                 v-if="obj.isOpenPagination" 
             />
