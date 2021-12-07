@@ -129,6 +129,7 @@ const currentChange = res => {
     obj.currentPage =res
 }
 
+//取出两个
 const showItem = computed(() => {
     return itemList.value.slice(
         (obj.currentPage-1)*2,
