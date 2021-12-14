@@ -1,12 +1,10 @@
 <template>
   <router-view />
-  <!-- <PersonalInformation /> -->
-  <!-- <Navigation /> -->
+  <!-- <item-list /> -->
 </template>
 
 <script setup>
-import Navigation from './components/Navigation.vue';
-import PersonalInformation from './components/PersonalInformation.vue';
+import ItemList from './components/ItemList.vue';
 </script>
 
 <style lang="less">

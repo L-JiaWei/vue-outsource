@@ -2,23 +2,29 @@
   <el-container class="app-client">
     <el-main>
       <p class="fontSize">
-        As a client, you can post your project to our <br />platform and let
+        As a client, you can post your project to our
+        <br />platform and let
         developers to help you complete them... text text....
       </p>
     </el-main>
     <el-footer>
-      <el-button type="primary" @click="toMyProfile">Continue</el-button>
+      <el-button type="primary" @click="toHomepage">Continue</el-button>
     </el-footer>
   </el-container>
 </template>
 
 <script setup>
+//////客户组件
 import { useRouter } from 'vue-router';
+import { useStore } from "vuex";
+import { onMounted } from "@vue/runtime-core";
+
+const store = useStore();
 
 const router = useRouter()
 
-const toMyProfile = () => {
-  router.push({ name: "MyProfile" })//////后面应该改为跳转到主页,暂时跳转到个人页
+const toHomepage = () => {
+  router.push({ name: "Homepage" })//////后面应该改为跳转到主页,暂时跳转到个人页
 }
 
 </script>

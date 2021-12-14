@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted} from "vue";
 import {
   ElMessage
 } from "element-plus";
@@ -38,6 +38,9 @@ import "element-plus/dist/index.css";
 import { userlogin } from "../network/dataSource";
 import index from "../components/LoginIndex.vue";
 import { useRouter } from "vue-router";
+// import store from "../store";
+import { useStore } from "vuex";
+const store = useStore();
 const router = useRouter();
 const refruleForm = ref(null);
 
@@ -46,6 +49,14 @@ const ruleForm = reactive({
   password: "",
   remember: false,
 });
+
+onMounted(() => {/////判断是否已经登录
+  let statusCode = localStorage.getItem("statusCode")
+  if(JSON.parse(statusCode) === 1){
+    ElMessage.success("Login succeeded, welcome back!");
+    router.push({name: "MyProfile"})
+  }
+})
 
 // 密码和邮箱验证规则
 const passwordValidate = (rule, value, callback) => {
@@ -90,9 +101,12 @@ const login = async () => {
     });
     if (res.data.statusCode === 1) {
       ElMessage.success("Login successful");
+      localStorage.setItem("statusCode", JSON.stringify(res.data.statusCode))
       localStorage.setItem("outUserInfo",JSON.stringify(res.data.data))
+      store.commit("updateUserInfo", res.data.data[0])
+      console.log(store.state.userInfo)
       router.push({
-        name: "MyProfile",
+        name: "Homepage",
       });
     } else {
       ElMessage.error("Login failed");

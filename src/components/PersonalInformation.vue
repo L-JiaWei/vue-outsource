@@ -3,9 +3,9 @@
         <div class="bg-Inf">
             <div class="ZhanWei"></div>
             <div class="Username">
-                <h2>{{ userInfo.userName }}</h2>
+                <h2>{{ userInfo.username }}</h2>
             </div>
-            <el-button-group>
+            <el-button-group class="btn-group">
                 <el-button round type="primary" class="btn1">Verify my email</el-button>
                 <el-button
                     round
@@ -21,7 +21,7 @@
                     class="avatar-uploader"
                     :show-file-list="false"
                     action="https://jsonplaceholder.typicode.com/posts/"
-                    with-credentials='false'
+                    with-credentials="false"
                     :on-success="handleAvatarSuccess"
                     thumbnail-mode="true"
                     :before-upload="beforeAvatarUpload"
@@ -62,7 +62,7 @@
     <el-dialog v-model="state.editInfo" title="编辑个人信息" width="35%">
         <el-form>
             <el-form-item label>
-                <el-input v-model="state.editUserInfo.userName" placeholder="请输入用户名" />
+                <el-input v-model="state.editUserInfo.username" placeholder="请输入用户名" />
             </el-form-item>
 
             <el-form-item label>
@@ -88,7 +88,6 @@
                     placeholder="请输入生日"
                     format="YYYY/MM/DD"
                     value-format="YYYY-MM-DD"
-                    @change="kk"
                 ></el-date-picker>
             </el-form-item>
             <el-form-item label>
@@ -100,12 +99,14 @@
 </template>
 
 <script setup>
+////////个人中心页组件
 import Navigation from './Navigation.vue';
 import { Avatar } from '@element-plus/icons'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex';
 import { userSignUp } from "../network/dataSource";
 import { ElMessage } from "element-plus";
+import router from '../router';
 
 const store = useStore()
 
@@ -115,7 +116,7 @@ const state = reactive({
     editUserInfo: {
         email: "",
         new_user: false,
-        userName: "",
+        username: "",
         description: "",
         location: "",
         salary: "",
@@ -128,10 +129,6 @@ const state = reactive({
 const userInfo = computed(() => store.state.userInfo)
 
 onMounted(() => {
-    // console.log(k != "")
-    // if(userLocalInfo != ""){
-
-    // }   
     for (let key in store.state.userInfo) {
         state.editUserInfo[key] = store.state.userInfo[key]
     }
@@ -164,7 +161,7 @@ const submit = async () => {
     const res = await userSignUp({
         email: state.editUserInfo.email,
         new_user: state.editUserInfo.new_user,
-        username: state.editUserInfo.userName,
+        username: state.editUserInfo.username,
         description: state.editUserInfo.description,
         location: state.editUserInfo.location,
         salary: state.editUserInfo.salary,
@@ -179,6 +176,9 @@ const submit = async () => {
         ElMessage.error("reg has failed");
     }
 }
+
+
+
 </script>
 
 

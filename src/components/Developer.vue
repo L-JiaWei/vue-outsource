@@ -46,11 +46,13 @@
 </template>
 
 <script setup>
+//////开发者组件
 import { reactive, ref } from "@vue/reactivity";
 import { userSignUp } from "../network/dataSource";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { onMounted } from "@vue/runtime-core";
 const store = useStore();
 const router = useRouter();
 
@@ -111,13 +113,12 @@ const submitUserInfo = async () => {
   console.log(res)
   if (res.data.statusCode === 1) {
     ElMessage.success("User data submitted successfully");
-    let {textarea, strTags} = state
-    store.commit("updateUserInfo",{
+    // let {textarea, strTags} = state
+    store.commit("updateUserInfo", {
       // email: store.state.userInfo.email,
-      description: textarea,
-      skillTags: strTags,
+      description: state.textarea,
+      skillTags: state.strTags,
     })
-    // store.state.registerUserInfo.{ description, skillTags, location }
     console.log(store.state.userInfo)
     router.push({ name: "MyProfile" })
   } else {

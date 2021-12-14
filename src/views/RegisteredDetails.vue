@@ -23,9 +23,34 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+/////////客户和开发者页面（注册详情页）
 import Client from "../components/Client.vue";
 import Developer from "../components/Developer.vue";
+import { ElMessage } from "element-plus";
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+onMounted(() => {
+    let statusCode = localStorage.getItem("statusCode")
+    console.log(statusCode)
+    if(JSON.parse(statusCode) !== 1){
+        ElMessage.warning("Sorry, you are not logged in, please log in")
+        router.push({ name: "login" })
+    }
+    let myData = localStorage.getItem("myData")
+    console.log(myData)
+    if (myData) {
+      myData = JSON.parse(myData)
+      store.commit("updateUserInfo", myData)
+      console.log(store.state.userInfo)
+    }
+})
+window.onbeforeunload = (event) => {
+  let myData = store.state.userInfo
+  localStorage.setItem("myData", JSON.stringify(myData))
+}
 
 const radio = ref("client");
 const toClient = () => {

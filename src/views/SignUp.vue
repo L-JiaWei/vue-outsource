@@ -45,7 +45,7 @@
   <index />
 </template>
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted} from "vue";
 import { ElMessage } from "element-plus";
 import { userSignUp } from "../network/dataSource";
 import index from "../components/LoginIndex.vue";
@@ -135,6 +135,7 @@ const signUp = async () => {
     console.log(res)
     if (res.data.statusCode === 1) {
       ElMessage.success("reg was successful");
+      localStorage.setItem("statusCode", res.data.statusCode)
       store.commit("updateUserInfo", ruleForm)
       console.log(store.state.userInfo);
       router.push({
@@ -147,6 +148,22 @@ const signUp = async () => {
   }
   ElMessage.error("Please enter the correct content");
 };
+
+onMounted(() => {
+  let myData = localStorage.getItem("myData")
+  console.log(myData)
+  if (myData) {
+    myData = JSON.parse(myData)
+    store.commit("updateUserInfo", myData)
+    console.log(store.state.userInfo)
+  }
+})
+
+window.onbeforeunload = (event) => {
+  let myData = store.state.userInfo
+  localStorage.setItem("myData", JSON.stringify(myData))
+}
+
 </script>
 
 <style lang="less">

@@ -4,6 +4,7 @@ import SignUp from '../views/SignUp.vue'
 import Experience from '../components/Experience.vue'
 import RegisteredDetails from '../views/RegisteredDetails.vue'
 import MyProfile from '../views/MyProfile.vue'
+import Homepage from '../views/Homepage.vue'
 const routes = [{
         path: '/',
         name: 'login',
@@ -28,6 +29,11 @@ const routes = [{
         path: '/experience',
         name: 'experience',
         component: Experience
+    },
+    {
+        path: '/Homepage',
+        name: 'Homepage',
+        component: Homepage
     },
     {
         path: '/:pathMatch(.*)',

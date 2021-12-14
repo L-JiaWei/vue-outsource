@@ -4,15 +4,16 @@ export default createStore({
     state: {
         registerUserInfo: {},
         userInfo: {
-            email: "asdfsd@qq.com",
+            email: "",
             new_user: true,
-            userName: "帅哥",
-            description: "前端",
-            location: "中国",
-            salary: "2000",
-            birthday: "2021-12-7"
+            username: "",
+            description: "",
+            skillTags: "",
+            location: "",
+            salary: "",
+            birthday: ""
         },
-        ltemLinkList: []
+        ltemLinkList: [],
     },
     mutations: {
         updateUserInfo(state, task) {
@@ -29,7 +30,7 @@ export default createStore({
         deleteItem(state, index) {
             state.ltemLinkList.splice(index, 1)
         },
-        updataTasks(state,tasks){
+        updataTasks(state, tasks) {
             console.log(tasks)
             state.ltemLinkList = tasks
         }

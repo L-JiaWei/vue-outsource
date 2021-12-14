@@ -99,21 +99,6 @@ import { reactive, ref,computed,onMounted } from 'vue'
 import { useStore } from 'vuex'
 import reviews from './Reviews.vue'
 
-onMounted(() => {
-	let mydata = localStorage.getItem("mydata")
-	console.log(mydata)
-	if(mydata){
-		mydata = JSON.parse(mydata)
-		store.commit("updataTasks",mydata)
-		console.log(store.state.ltemLinkList)
-	}
-})
-
-window.onbeforeunload = (event) => {
-	let mydata = store.state.ltemLinkList
-	localStorage.setItem("mydata",JSON.stringify(mydata))
-}
-
 const store = useStore()
 
 const obj = reactive({
@@ -131,6 +116,7 @@ const currentChange = res => {
 
 //取出两个
 const showItem = computed(() => {
+    console.log(itemList.value)
     return itemList.value.slice(
         (obj.currentPage-1)*2,
         obj.currentPage*2
@@ -157,6 +143,7 @@ let ruleForm = ref({
 
 const confirm = () => {
     store.commit("addItemLink",ruleForm.value)
+    console.log(ruleForm.value)
     obj.dialogVisible=false
     ruleForm.value = {...initFrom}
 }

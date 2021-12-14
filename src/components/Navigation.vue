@@ -3,9 +3,6 @@
         <el-card class="box-card">
             <div class="bg-nav">
                 <h2>Outsourcin<br/>platform</h2>
-                <!-- <el-icon :size="60" color="white" class="logo">
-                <apple />
-                </el-icon>-->
                 <div class="btn">
                     <el-button round type="primary" class="btn1">Post Project</el-button>
                     <el-dropdown trigger="click" @command="clickDropdown">
@@ -17,6 +14,7 @@
                         </el-button>
                         <template #dropdown>
                             <el-dropdown-menu>
+                                <el-dropdown-item command="homepage">Homepage</el-dropdown-item>
                                 <el-dropdown-item command="my-profile">My Profile</el-dropdown-item>
                                 <el-dropdown-item command="payment">Payment</el-dropdown-item>
                                 <el-dropdown-item command="my-projects">My Projects</el-dropdown-item>
@@ -31,6 +29,7 @@
 </template>
 
 <script setup>
+/////导航栏组件
 import { ArrowDown, Apple } from "@element-plus/icons";
 import { userSignOut } from "../network/dataSource";
 import { useStore } from "vuex"
@@ -50,10 +49,17 @@ const clickDropdown = async (command) => {
         console.log(res)
         if (res.data.statusCode === 1) {
             ElMessage.success("Log out successfully");
+            localStorage.clear()
             router.push({ name: "login" })
         } else {
             ElMessage.success("Failed to log out");
         }
+    }
+    if(command === "homepage"){
+        router.push({name: "Homepage"})
+    }
+    if(command === "my-profile"){
+        router.push({name: "MyProfile"})
     }
 }
 </script>
