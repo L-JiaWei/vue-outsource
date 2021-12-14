@@ -1,19 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Login from '../views/Login.vue'
-import SignUp from '../views/SignUp.vue'
 import Experience from '../components/Experience.vue'
 import RegisteredDetails from '../views/RegisteredDetails.vue'
 import MyProfile from '../views/MyProfile.vue'
 import Homepage from '../views/Homepage.vue'
-const routes = [{
-        path: '/',
-        name: 'login',
-        component: Login
-    },
+import LoginIndex from "../views/LoginIndex.vue"
+
+const routes = [
     {
-        path: '/signup',
-        name: 'signup',
-        component: SignUp
+        path:'/',
+        name:'LoginIndex',
+        component:LoginIndex
     },
     {
         path: "/RegisteredDetails",
@@ -43,7 +39,9 @@ const routes = [{
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
-    routes
+    routes,
+    mode:"history",
+    base:"/op/"
 })
 
 export default router

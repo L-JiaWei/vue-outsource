@@ -2,10 +2,10 @@
   <div class="app-container">
     <div class="container">
       <div>
-        <el-radio-group v-model="dat.Projects">
-          <el-radio-button @click="toPro" label="Projects" />
-          <el-radio-button @click="toDev" label="Developers" />
-        </el-radio-group>
+        <el-button-group v-model="dat.Projects">
+          <el-button @click="toPro">Projects</el-button>
+          <el-button @click="toDev">Developers</el-button>
+        </el-button-group>
         <el-input placeholder="Search" />
       </div>
       <el-card v-if="dat.show">
@@ -136,6 +136,13 @@ const toDev = () => {
     display: flex;
     justify-content: center;
     margin-bottom: 15px;
+  }
+  .el-button-group{
+    display: flex;
+    justify-content: space-between;
+  }
+  .el-button-group .el-button{
+    width: 100%;
   }
   .top {
     display: flex;

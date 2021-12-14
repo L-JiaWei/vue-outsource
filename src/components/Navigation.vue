@@ -50,7 +50,7 @@ const clickDropdown = async (command) => {
         if (res.data.statusCode === 1) {
             ElMessage.success("Log out successfully");
             localStorage.clear()
-            router.push({ name: "login" })
+            router.push({ name: "LoginIndex" })
         } else {
             ElMessage.success("Failed to log out");
         }
