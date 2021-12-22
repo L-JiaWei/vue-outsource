@@ -4,14 +4,19 @@ import RegisteredDetails from '../views/RegisteredDetails.vue'
 import MyProfile from '../views/MyProfile.vue'
 import Homepage from '../views/Homepage.vue'
 import LoginIndex from "../views/LoginIndex.vue"
-import LookingForDevelopers from '../views/LookingForDevelopers.vue'
+import ReleasePage from "../views/ReleasePage.vue"
+import LookingForDevelopers from "../views/LookingForDevelopers.vue"
 
-const routes = [
-    // {
-    //     path:'/',
-    //     name:'LoginIndex',
-    //     component:LoginIndex
-    // },
+const routes = [{
+        path: '/',
+        name: 'LoginIndex',
+        component: LoginIndex
+    },
+    {
+        path: "/ReleasePage",
+        name: "ReleasePage",
+        component: ReleasePage
+    },
     {
         path: "/RegisteredDetails",
         name: "RegisteredDetails",
@@ -31,15 +36,14 @@ const routes = [
         path: '/Homepage',
         name: 'Homepage',
         component: Homepage
+    }, {
+        path: '/LookingForDevelopers',
+        name: 'LookingForDevelopers',
+        component: LookingForDevelopers
     },
     {
         path: '/:pathMatch(.*)',
         redirect: '/'
-    },
-    {
-        path: '/',
-        name: 'LookingForDevelopers',
-        component: LookingForDevelopers
     }
 ]
 
