@@ -4,12 +4,17 @@ import RegisteredDetails from '../views/RegisteredDetails.vue'
 import MyProfile from '../views/MyProfile.vue'
 import Homepage from '../views/Homepage.vue'
 import LoginIndex from "../views/LoginIndex.vue"
-
+import ReleasePage from "../views/ReleasePage.vue"
 const routes = [
     {
         path:'/',
         name:'LoginIndex',
         component:LoginIndex
+    },
+    {
+        path:"/ReleasePage",
+        name:"ReleasePage",
+        component:ReleasePage
     },
     {
         path: "/RegisteredDetails",
