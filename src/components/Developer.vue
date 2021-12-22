@@ -86,7 +86,7 @@ const state = reactive({
   textarea: '',
   // strText: '',
   strTags: '',
-  tags: ref([]),
+  tags: ([]),
 })
 
 const selectStack = (value) => {

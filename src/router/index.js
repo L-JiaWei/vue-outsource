@@ -4,13 +4,14 @@ import RegisteredDetails from '../views/RegisteredDetails.vue'
 import MyProfile from '../views/MyProfile.vue'
 import Homepage from '../views/Homepage.vue'
 import LoginIndex from "../views/LoginIndex.vue"
+import LookingForDevelopers from '../views/LookingForDevelopers.vue'
 
 const routes = [
-    {
-        path:'/',
-        name:'LoginIndex',
-        component:LoginIndex
-    },
+    // {
+    //     path:'/',
+    //     name:'LoginIndex',
+    //     component:LoginIndex
+    // },
     {
         path: "/RegisteredDetails",
         name: "RegisteredDetails",
@@ -34,14 +35,19 @@ const routes = [
     {
         path: '/:pathMatch(.*)',
         redirect: '/'
+    },
+    {
+        path: '/',
+        name: 'LookingForDevelopers',
+        component: LookingForDevelopers
     }
 ]
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes,
-    mode:"history",
-    base:"/op/"
+    mode: "history",
+    base: "/op/"
 })
 
 export default router
